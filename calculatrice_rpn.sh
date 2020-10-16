@@ -8,18 +8,18 @@ operateurs=()
 for i in $*
 do
 	case $i in
-		'+') operateurs+=( "$i" )
+		'+') operateurs[${#operateurs[@]}]='+'
 			op=true;;
-		'-') operateurs+=( "$i" )
+		'-') operateurs[${#operateurs[@]}]='-'
 			op=true;;
-		'x') operateurs+=( "*" )
+		'x') operateurs[${#operateurs[@]}]='*'
 			op=true;;
-		'/') operateurs+=( "/" )
+		'/') operateurs[${#operateurs[@]}]='/'
 			op=true;;
 		*)
 			if [[ "$i" =~ ^[0-9]+$ ]] && [ "$op" = false ]
 			then
-				operandes+=( "$i" )
+				operandes[${#operandes[@]}]="$i"
 			else
 				echo "ERROR: Mauvaise entree d'arguements"
 				exit 1
@@ -28,7 +28,7 @@ do
 done
 
 nbOperandes=${#operandes[@]}
-diffOpe=$(("$nbOperandes" - "${#operateurs[@]}"))
+diffOpe=$(($nbOperandes - ${#operateurs[@]}))
 
 if [ "$nbOperandes" -lt "2" ]
 then
@@ -46,17 +46,15 @@ while (("$nbOperandes"!="1"))
 do
 	operateur=${operateurs[$indiceOper]}
 	unset operateurs[$indiceOper]
-	indiceOper=$(("$indiceOper" + "1"))
+	indiceOper=$(($indiceOper + 1))
 
-	nbOperandes=$(("$nbOperandes" - "1"))
+	nbOperandes=$(($nbOperandes - 1))
 	operande1=${operandes[$nbOperandes]}
 	unset operandes[$nbOperandes]
 	
-	temp=$(("$nbOperandes" - "1"))
+	temp=$(($nbOperandes - 1))
 	operande2=${operandes[$temp]}
-	resultat=$(("$operande1" "$operateur" "$operande2"))	
-	echo $operande1 $operateur $operande2
-	echo $resultat	
+	resultat=$(($operande1 $operateur $operande2))	
 	operandes[$temp]="$resultat"
 done
 
