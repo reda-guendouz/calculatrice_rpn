@@ -1,10 +1,13 @@
 #!/bin/bash
 
-op=false
+#variable qui permet de verifier si on entre les bons arguements
+op=false 
 
-operandes=()
+#tableaux qui stock les operandes et operateurs
+operandes=() 
 operateurs=()
 
+#parcours des arguments et stockage dans les tableaux
 for i in $*
 do
 	case $i in
@@ -21,12 +24,13 @@ do
 			then
 				operandes[${#operandes[@]}]="$i"
 			else
-				echo "ERROR: Mauvaise entree d'arguements"
+				echo "ERROR: Mauvaise entree d'arguements"  #Erreur si on entre un operateurs apres un operandes ou si on entre un mauvais argument
 				exit 1
 			fi;;
 	esac
 done
 
+#Test si on a le bon nombre d'argument
 nbOperandes=${#operandes[@]}
 diffOpe=$(($nbOperandes - ${#operateurs[@]}))
 
@@ -40,6 +44,8 @@ then
 	exit 3
 fi
 
+
+#On passe au calcul avec un systeme de pile grâce a nos deux tableaux
 resultat=0
 indiceOper=0
 while (("$nbOperandes"!="1"))
@@ -58,5 +64,6 @@ do
 	operandes[$temp]="$resultat"
 done
 
+#On renvoie le resultat
 echo "Resultat obtenu : $resultat"
 exit 0
